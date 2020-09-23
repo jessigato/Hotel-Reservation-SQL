@@ -1,0 +1,1281 @@
+SQL> 
+SQL> -- Jessica Torres
+SQL> -- PW: Prieta2006
+SQL> 
+SQL> DROP TABLE RESDETAIL_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE ROOM_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE ROOMTYPE_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE RESERVATION_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE RATETYPE_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE AGENT_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE AGENTTYPE_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE CUSTOMER_jxt;
+
+Table dropped.
+
+SQL> DROP TABLE CUSTTYPE_jxt;
+
+Table dropped.
+
+SQL> 
+SQL> -- 1A.
+SQL> CREATE TABLE CUSTTYPE_jxt (
+  2  CustType	     VARCHAR(1)      NOT NULL,
+  3  CustTypeDesc    VARCHAR(10)     NOT NULL,
+  4  PRIMARY KEY(CustType)
+  5  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE CUSTOMER_jxt (
+  2  CustID	     NUMBER(3)	     NOT NULL,
+  3  CustFName	     VARCHAR(15)     NOT NULL,
+  4  CustLName	     VARCHAR(15)     NOT NULL,
+  5  CustPhone	     CHAR(10),
+  6  CustType	     VARCHAR(1)      NOT NULL,
+  7  LoyaltyID	     NUMBER(3),
+  8  PRIMARY KEY(CustID),
+  9  FOREIGN KEY(CustType) REFERENCES CUSTTYPE_jxt(CustType)
+ 10  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE AGENTTYPE_jxt (
+  2  AgentType	     VARCHAR(2)      NOT NULL,
+  3  AgentTypeDesc   VARCHAR(10)     NOT NULL,
+  4  PRIMARY KEY(AgentType)
+  5  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE AGENT_jxt (
+  2  AgentID	     NUMBER (2)      NOT NULL,
+  3  AgentFName      VARCHAR(15)     NOT NULL,
+  4  AgentLName      VARCHAR(15)     NOT NULL,
+  5  AgentType	     VARCHAR(2)      NOT NULL,
+  6  PRIMARY KEY(AgentID),
+  7  FOREIGN KEY(AgentType) REFERENCES AGENTTYPE_jxt(AgentType)
+  8  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE RATETYPE_jxt (
+  2  RateType	     VARCHAR(1),
+  3  RateTypeDesc    VARCHAR(10)     NOT NULL,
+  4  PRIMARY KEY(RateType)
+  5  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE RESERVATION_jxt (
+  2  ResID	     NUMBER(4),
+  3  CheckInDate     DATE	     NOT NULL,
+  4  CheckOutDate    DATE	     NOT NULL,
+  5  CustID	     NUMBER(3)	     NOT NULL,
+  6  AgentID	     NUMBER(2)	     NOT NULL,
+  7  RateType	     VARCHAR(1)      NOT NULL,
+  8  PRIMARY KEY(ResID),
+  9  FOREIGN KEY(RateType) REFERENCES RATETYPE_jxt(RateType),
+ 10  FOREIGN KEY(AgentID) REFERENCES AGENT_jxt(AgentID),
+ 11  FOREIGN KEY(CustID) REFERENCES CUSTOMER_jxt(CustID)
+ 12  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE ROOMTYPE_jxt (
+  2  RoomType	     VARCHAR(2)      NOT NULL,
+  3  RoomTypeDesc    VARCHAR(15)     NOT NULL,
+  4  PRIMARY KEY(RoomType)
+  5  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE ROOM_jxt (
+  2  RoomNum	     NUMBER(3)	     NOT NULL,
+  3  RoomType	     VARCHAR(2)      NOT NULL,
+  4  PRIMARY KEY(RoomNum),
+  5  FOREIGN KEY(RoomType) REFERENCES ROOMTYPE_jxt(RoomType)
+  6  ) ;
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE RESDETAIL_jxt (
+  2  ResID	     NUMBER(4),
+  3  RoomNum	     NUMBER(3)	     NOT NULL,
+  4  RateAmt	     NUMBER(3)	     NOT NULL,
+  5  GuestCount      NUMBER(1),
+  6  PRIMARY KEY(ResID, RoomNum),
+  7  FOREIGN KEY(RoomNum) REFERENCES ROOM_jxt(RoomNum),
+  8  FOREIGN KEY(ResID) REFERENCES RESERVATION_jxt(ResID)
+  9  ) ;
+
+Table created.
+
+SQL> 
+SQL> -- 2A.
+SQL> INSERT INTO CUSTTYPE_jxt
+  2  VALUES('C', 'Corporate');
+
+1 row created.
+
+SQL> INSERT INTO CUSTTYPE_jxt
+  2  VALUES('I', 'Individual');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (85, 'Wesley', 'Tanner', '8175551193', 'C', 323) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (100, 'Breanna', 'Rhodes', '2145559191', 'I', 129) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt (CustID, CustFName, CustLName, CustType)
+  2  VALUES (15, 'Jeff', 'Miner', 'I') ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (77, 'Kim', 'Jackson', '8175554911', 'C', 210) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (119, 'Mary', 'Vaugn', '8175552334', 'I', 118) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (97, 'Chris', 'Mancha', '4695553440', 'I', 153) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt
+  2  VALUES (28, 'Renee', 'Walker', '2145559285', 'I', 135) ;
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER_jxt (CustID, CustFName, CustLName, CustType)
+  2  VALUES (23, 'Shelby', 'Day', 'I') ;
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO AGENTTYPE_jxt
+  2  VALUES ('FD', 'Front Desk');
+
+1 row created.
+
+SQL> INSERT INTO AGENTTYPE_jxt
+  2  VALUES ('T', 'Telephone');
+
+1 row created.
+
+SQL> INSERT INTO AGENTTYPE_jxt
+  2  VALUES ('RC', 'Res Center');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO AGENT_jxt
+  2  VALUES (20, 'Megan', 'Smith', 'FD') ;
+
+1 row created.
+
+SQL> INSERT INTO AGENT_jxt
+  2  VALUES (5, 'Janice', 'May', 'T') ;
+
+1 row created.
+
+SQL> INSERT INTO AGENT_jxt
+  2  VALUES (14, 'John', 'King', 'RC') ;
+
+1 row created.
+
+SQL> INSERT INTO AGENT_jxt
+  2  VALUES (28, 'Ray', 'Schultz', 'T') ;
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO RATETYPE_jxt
+  2  VALUES ('C', 'Corporate');
+
+1 row created.
+
+SQL> INSERT INTO RATETYPE_jxt
+  2  VALUES ('S', 'Standard');
+
+1 row created.
+
+SQL> INSERT INTO RATETYPE_jxt
+  2  VALUES ('W', 'Weekend');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1001, TO_DATE('2019-09-05', 'YYYY-MM-DD'), TO_DATE('2019-09-07', 'YYYY-MM-DD'), 85, 20, 'C');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1002, TO_DATE('2019-09-01', 'YYYY-MM-DD'), TO_DATE('2019-09-10', 'YYYY-MM-DD'), 100, 5, 'S');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1003, TO_DATE('2019-09-09', 'YYYY-MM-DD'), TO_DATE('2019-09-11', 'YYYY-MM-DD'), 15, 14, 'W');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1004, TO_DATE('2019-09-29', 'YYYY-MM-DD'), TO_DATE('2019-10-10', 'YYYY-MM-DD'), 77, 28, 'C');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1005, TO_DATE('2019-09-15', 'YYYY-MM-DD'), TO_DATE('2019-09-18', 'YYYY-MM-DD'), 119, 20, 'S');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1006, TO_DATE('2019-09-24', 'YYYY-MM-DD'), TO_DATE('2019-09-26', 'YYYY-MM-DD'), 97, 14, 'W');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1007, TO_DATE('2019-09-20', 'YYYY-MM-DD'), TO_DATE('2019-09-25', 'YYYY-MM-DD'), 100, 20, 'S');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1008, TO_DATE('2019-10-21', 'YYYY-MM-DD'), TO_DATE('2019-10-03', 'YYYY-MM-DD'), 85, 5, 'W');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1009, TO_DATE('2019-10-01', 'YYYY-MM-DD'), TO_DATE('2019-10-04', 'YYYY-MM-DD'), 28, 14, 'W');
+
+1 row created.
+
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1010, TO_DATE('2019-10-01', 'YYYY-MM-DD'), TO_DATE('2019-10-09', 'YYYY-MM-DD'), 23, 28, 'W');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO ROOMTYPE_jxt
+  2  VALUES ('K', 'King Bed');
+
+1 row created.
+
+SQL> INSERT INTO ROOMTYPE_jxt
+  2  VALUES ('D', '2 Double Beds');
+
+1 row created.
+
+SQL> INSERT INTO ROOMTYPE_jxt
+  2  VALUES ('KS', 'King Suite');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (224, 'K');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (225, 'D');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (305, 'D');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (409, 'D');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (320, 'D');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (302, 'K');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (501, 'KS');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (502, 'KS');
+
+1 row created.
+
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (321, 'K');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1001, 224, 120, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1001, 225, 125, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1002, 305, 149, 4);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1003, 409, 99, 3);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1004, 320, 110, 4);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1005, 302, 139, 1);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1006, 501, 119, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1006, 502, 119, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1007, 302, 139, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1008, 320, 89, 3);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1008, 321, 99, 1);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1009, 502, 129, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1009, 409, 129, 2);
+
+1 row created.
+
+SQL> INSERT INTO RESDETAIL_jxt
+  2  VALUES (1010, 225, 109, 4);
+
+1 row created.
+
+SQL> 
+SQL> COMMIT ;
+
+Commit complete.
+
+SQL> 
+SQL> --
+SQL> UPDATE CUSTOMER_jxt
+  2  	SET CustPhone = '2145551234'
+  3   WHERE CustID = 85 ;
+
+1 row updated.
+
+SQL> 
+SQL> INSERT INTO CUSTOMER_jxt(CustID, CustFName, CustLName, CustType)
+  2  VALUES (120, 'Amanda', 'Green', 'C');
+
+1 row created.
+
+SQL> 
+SQL> UPDATE RESERVATION_jxt
+  2  	SET CheckOutDate = TO_DATE('2018-02-08', 'YYYY-MM-DD')
+  3   WHERE ResID = 1001;
+
+1 row updated.
+
+SQL> 
+SQL> INSERT INTO RESERVATION_jxt
+  2  VALUES (1011, TO_DATE('2018-03-01', 'YYYY-MM-DD'), TO_DATE('2018-03-04', 'YYYY-MM-DD'), 120, 14, 'W');
+
+1 row created.
+
+SQL> 
+SQL> UPDATE RESDETAIL_jxt
+  2  	SET RateAmt = 89
+  3   WHERE ResID = 1003 ;
+
+1 row updated.
+
+SQL> 
+SQL> UPDATE RESERVATION_jxt
+  2  	SET RateType = 'C'
+  3   WHERE ResID = 1003 ;
+
+1 row updated.
+
+SQL> 
+SQL> INSERT INTO RESDETAIL_jxt(ResID, RoomNum, RateAmt)
+  2  VALUES (1011, 224, 119);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO RESDETAIL_jxt(ResID, RoomNum, RateAmt)
+  2  VALUES (1011, 225, 129);
+
+1 row created.
+
+SQL> 
+SQL> COMMIT ;
+
+Commit complete.
+
+SQL> 
+SQL> -- 1. *
+SQL> UPDATE RESDETAIL_jxt
+  2  	SET RoomNum = 321
+  3   WHERE ResID = 1010 ;
+
+1 row updated.
+
+SQL> 
+SQL> UPDATE RESERVATION_jxt
+  2  	SET RateType = 'C'
+  3   WHERE ResID = 1010 ;
+
+1 row updated.
+
+SQL> 
+SQL> SELECT RoomNum, RateAmt
+  2    FROM RESDETAIL_jxt
+  3   WHERE ResID = 1011 ;
+
+   ROOMNUM    RATEAMT                                                           
+---------- ----------                                                           
+       224        119                                                           
+       225        129                                                           
+
+SQL> 
+SQL> -- 2. *
+SQL> UPDATE CUSTOMER_jxt
+  2  	SET CustType = 'I'
+  3   WHERE CustID = 120 ;
+
+1 row updated.
+
+SQL> 
+SQL> UPDATE RESERVATION_jxt
+  2  	SET CheckInDate = TO_DATE('2019-10-08', 'YYYY-MM-DD'), CheckOutDate = TO_DATE('2019-10-11', 'YYYY-MM-DD')
+  3   WHERE ResID = 1011 ;
+
+1 row updated.
+
+SQL> 
+SQL> -- 3. *
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (301, 'D') ;
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (303, 'D') ;
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO ROOM_jxt
+  2  VALUES (304, 'KS') ;
+
+1 row created.
+
+SQL> 
+SQL> -- 4. *
+SQL> INSERT INTO RESDETAIL_jxt(ResID, RoomNum, RateAmt, GuestCount)
+  2  VALUES (1005, 303, 119, 2) ;
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO RESDETAIL_jxt(ResID, RoomNum, RateAmt, GuestCount)
+  2  VALUES (1005, 304, 149, 2) ;
+
+1 row created.
+
+SQL> 
+SQL> -- 5. *
+SQL> INSERT INTO CUSTOMER_jxt(CustID, CustFName, CustLName, CustPhone, CustType)
+  2  VALUES ((SELECT MAX(CustID)+1 FROM CUSTOMER_jxt), 'Susan', 'White', '2145552020', 'C') ;
+
+1 row created.
+
+SQL> 
+SQL> SET LIN[ESIZE] {1000 | n}
+SP2-0268: linesize option not a valid number
+SQL> SET PAGESIZE 1000
+SQL> 
+SQL> COLUMN RateType FORMAT a8
+SQL> COLUMN AgentType FORMAT a9
+SQL> COLUMN CheckInDate FORMAT a11
+SQL> COLUMN CheckOutDate FORMAT a12
+SQL> COLUMN RoomType FORMAT a8
+SQL> 
+SQL> COMMIT ;
+
+Commit complete.
+
+SQL> 
+SQL> -- 6.
+SQL> SELECT CustID, CustFName, CustLName
+  2    FROM CUSTOMER_jxt
+  3   WHERE CustPhone IS NULL ;
+
+    CUSTID CUSTFNAME       CUSTLNAME                                            
+---------- --------------- ---------------                                      
+        15 Jeff            Miner                                                
+        23 Shelby          Day                                                  
+       120 Amanda          Green                                                
+
+SQL> 
+SQL> -- 7. *
+SQL> SELECT AVG(RateAmt) AS "AvgRate"
+  2    FROM RESDETAIL_jxt ;
+
+   AvgRate                                                                      
+----------                                                                      
+121.111111                                                                      
+
+SQL> 
+SQL> -- 8. *
+SQL> SELECT COUNT(DISTINCT RoomNum) AS "RoomResCount"
+  2    FROM RESDETAIL_jxt ;
+
+RoomResCount                                                                    
+------------                                                                    
+          11                                                                    
+
+SQL> 
+SQL> -- 9. *
+SQL> SELECT RT.RoomType AS "RoomType", COUNT(R.RoomNum) AS "RoomCount"
+  2    FROM ROOM_jxt R
+  3   INNER JOIN ROOMTYPE_jxt RT
+  4  	 ON RT.RoomType = R.RoomType
+  5   GROUP BY RT.RoomType ;
+
+RoomType  RoomCount                                                             
+-------- ----------                                                             
+K                 3                                                             
+D                 6                                                             
+KS                3                                                             
+
+SQL> 
+SQL> -- 10. *
+SQL> SELECT R.ResID AS "ResNum", R.CheckInDate AS "CheckIn", R.CheckOutDate AS "CheckOut", COUNT(RD.RoomNum) AS "RoomCount"
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN RESDETAIL_jxt RD
+  4  	 ON R.ResID = RD.ResID
+  5   GROUP BY R.ResID, R.CheckInDate, R.CheckOutDate, RD.RoomNum ;
+
+    ResNum CheckIn   CheckOut   RoomCount                                       
+---------- --------- --------- ----------                                       
+      1006 24-SEP-19 26-SEP-19          1                                       
+      1005 15-SEP-19 18-SEP-19          1                                       
+      1007 20-SEP-19 25-SEP-19          1                                       
+      1001 05-SEP-19 08-FEB-18          1                                       
+      1003 09-SEP-19 11-SEP-19          1                                       
+      1008 21-OCT-19 03-OCT-19          1                                       
+      1004 29-SEP-19 10-OCT-19          1                                       
+      1010 01-OCT-19 09-OCT-19          1                                       
+      1005 15-SEP-19 18-SEP-19          1                                       
+      1006 24-SEP-19 26-SEP-19          1                                       
+      1011 08-OCT-19 11-OCT-19          1                                       
+      1011 08-OCT-19 11-OCT-19          1                                       
+      1002 01-SEP-19 10-SEP-19          1                                       
+      1008 21-OCT-19 03-OCT-19          1                                       
+      1005 15-SEP-19 18-SEP-19          1                                       
+      1001 05-SEP-19 08-FEB-18          1                                       
+      1009 01-OCT-19 04-OCT-19          1                                       
+      1009 01-OCT-19 04-OCT-19          1                                       
+
+18 rows selected.
+
+SQL> 
+SQL> -- 11.A *
+SQL> SELECT C.CustID AS "CustomerID", CustFName || ' ' || CustLName AS "CustomerName", COUNT(R.ResID) AS "ResCount"
+  2    FROM CUSTOMER_jxt C
+  3   INNER JOIN RESERVATION_jxt R
+  4  	 ON C.CustID = R.CustID
+  5   GROUP BY C.CustID, CustFName || ' ' || CustLName
+  6   ORDER BY COUNT(R.ResID) DESC, C.CustID ASC ;
+
+CustomerID CustomerName                      ResCount                           
+---------- ------------------------------- ----------                           
+        85 Wesley Tanner                            2                           
+       100 Breanna Rhodes                           2                           
+        15 Jeff Miner                               1                           
+        23 Shelby Day                               1                           
+        28 Renee Walker                             1                           
+        77 Kim Jackson                              1                           
+        97 Chris Mancha                             1                           
+       119 Mary Vaugn                               1                           
+       120 Amanda Green                             1                           
+
+9 rows selected.
+
+SQL> 
+SQL> -- 11.B *
+SQL> SELECT RD.RoomNum AS "RmNum", R.ResID AS "ResNum", RT.RateType AS "RateType", RD.RateAmt AS "RateAmt"
+  2    FROM RESDETAIL_jxt RD
+  3   INNER JOIN RESERVATION_jxt R
+  4  	 ON RD.ResID = R.ResID
+  5   INNER JOIN RATETYPE_jxt RT
+  6  	 ON R.RateType = RT.RateType
+  7   ORDER BY R.ResID ASC, RD.RoomNum ASC ;
+
+     RmNum     ResNum RateType    RateAmt                                       
+---------- ---------- -------- ----------                                       
+       224       1001 C               120                                       
+       225       1001 C               125                                       
+       305       1002 S               149                                       
+       409       1003 C                89                                       
+       320       1004 C               110                                       
+       302       1005 S               139                                       
+       303       1005 S               119                                       
+       304       1005 S               149                                       
+       501       1006 W               119                                       
+       502       1006 W               119                                       
+       302       1007 S               139                                       
+       320       1008 W                89                                       
+       321       1008 W                99                                       
+       409       1009 W               129                                       
+       502       1009 W               129                                       
+       321       1010 C               109                                       
+       224       1011 W               119                                       
+       225       1011 W               129                                       
+
+18 rows selected.
+
+SQL> 
+SQL> -- 12. *
+SQL> SELECT R.RateType AS "RateType", R.RateTypeDesc AS "Description", COUNT(ResID) AS "ResCount"
+  2    FROM RATETYPE_jxt R
+  3   INNER JOIN RESERVATION_jxt RD
+  4  	 ON R.RateType = RD.RateType
+  5   GROUP BY R.RateType
+  6   ORDER BY ResID DESC ;
+SELECT R.RateType AS "RateType", R.RateTypeDesc AS "Description", COUNT(ResID) AS "ResCount"
+                                 *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> 
+SQL> -- 13. *
+SQL> SELECT CustID AS "Customer_ID", CustFName AS "First_Name", CustLName AS "Last_Name", '('||SUBSTR(CustPhone,1,3)||')'||SUBSTR(CustPhone,4,3)||'-'||SUBSTR(CustPhone,7,4) AS "Phone"
+  2   FROM CUSTOMER_jxt
+  3  ORDER BY CustID ;
+
+Customer_ID First_Name      Last_Name                                           
+----------- --------------- ---------------                                     
+Phone                                                                           
+-------------------------------------------                                     
+         15 Jeff            Miner                                               
+()-                                                                             
+                                                                                
+         23 Shelby          Day                                                 
+()-                                                                             
+                                                                                
+         28 Renee           Walker                                              
+(214)555-9285                                                                   
+                                                                                
+         77 Kim             Jackson                                             
+(817)555-4911                                                                   
+                                                                                
+         85 Wesley          Tanner                                              
+(214)555-1234                                                                   
+                                                                                
+         97 Chris           Mancha                                              
+(469)555-3440                                                                   
+                                                                                
+        100 Breanna         Rhodes                                              
+(214)555-9191                                                                   
+                                                                                
+        119 Mary            Vaugn                                               
+(817)555-2334                                                                   
+                                                                                
+        120 Amanda          Green                                               
+()-                                                                             
+                                                                                
+        121 Susan           White                                               
+(214)555-2020                                                                   
+                                                                                
+
+10 rows selected.
+
+SQL> 
+SQL> -- 14.
+SQL> SELECT RD.ResID AS "ResNum", R.RoomNum AS "RmNum", RT.RoomType AS "RmType", RT.RoomTypeDesc AS "RmDesc, RAT.RateType AS "RateType", RAT.RateTypeDesc AS "RateDesc, MIN(RD.RateAmt) AS "RateAmt"
+  2    FROM RESDETAIL_jxt RD
+  3   INNER JOIN ROOM_jxt R
+  4  	 ON RD.RoomNum = R.RoomNum
+  5   INNER JOIN RATETYPE_jxt RAT
+  6  	 ON RD.RateType = RAT.RateType
+  7   INNER JOIN ROOMTYPE_jxt RT
+  8  	 ON R.RoomType = RT.RoomType
+  9   GROUP BY RD.ResID
+ 10   ORDER BY RateAmt DESC ;
+SELECT RD.ResID AS "ResNum", R.RoomNum AS "RmNum", RT.RoomType AS "RmType", RT.RoomTypeDesc AS "RmDesc, RAT.RateType AS "RateType", RAT.RateTypeDesc AS "RateDesc, MIN(RD.RateAmt) AS "RateAmt"
+                                                                                                                         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> 
+SQL> -- 15. *
+SQL> SELECT RD.RoomNum, RM.RoomType, RoomTypeDesc, RateType, RD.RateAmt
+  2    FROM ROOM_jxt RM, ROOMTYPE_jxt RT, RESDETAIL_jxt RD, RESERVATION_jxt R
+  3   WHERE RD.ResID = R.ResID AND
+  4  	    RD.RoomNum = RM.RoomNum AND
+  5  	    RM.RoomType = RT.RoomType AND
+  6  	    GuestCount >= 1
+  7   ORDER BY RM.RoomNum, RD.RateAmt ;
+
+   ROOMNUM ROOMTYPE ROOMTYPEDESC    RATETYPE    RATEAMT                         
+---------- -------- --------------- -------- ----------                         
+       224 K        King Bed        C               120                         
+       225 D        2 Double Beds   C               125                         
+       302 K        King Bed        S               139                         
+       302 K        King Bed        S               139                         
+       303 D        2 Double Beds   S               119                         
+       304 KS       King Suite      S               149                         
+       305 D        2 Double Beds   S               149                         
+       320 D        2 Double Beds   W                89                         
+       320 D        2 Double Beds   C               110                         
+       321 K        King Bed        W                99                         
+       321 K        King Bed        C               109                         
+       409 D        2 Double Beds   C                89                         
+       409 D        2 Double Beds   W               129                         
+       501 KS       King Suite      W               119                         
+       502 KS       King Suite      W               119                         
+       502 KS       King Suite      W               129                         
+
+16 rows selected.
+
+SQL> 
+SQL> -- 16.
+SQL> SELECT CT.CustType AS "CustType", CT.CustTypeDesc AS "Description", COUNT(C.CustType) AS "Count"
+  2    FROM CUSTTYPE_jxt CT
+  3   INNER JOIN CUSTOMER_jxt C
+  4  	 ON CT.CustType = C.CustType
+  5   GROUP BY CT.CustType, CT.CustTypeDesc
+  6   ORDER BY COUNT(C.CustType) DESC ;
+
+C Descriptio      Count                                                         
+- ---------- ----------                                                         
+I Individual          7                                                         
+C Corporate           3                                                         
+
+SQL> 
+SQL> -- 17.
+SQL> SELECT R.ResID, RD.RoomNum, ROOM.RoomType, RoomTypeDesc, TO_CHAR(RateAmt, '$9999.99')
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN RESDETAIL_jxt RD
+  4  	 ON R.ResID = RD.ResID
+  5   INNER JOIN ROOM_jxt ROOM
+  6  	 ON RD.RoomNum = ROOM.RoomNum
+  7   INNER JOIN ROOMTYPE_jxt RT
+  8  	 ON ROOM.RoomType = RT.RoomType
+  9   WHERE RD.RateAmt <= 119
+ 10   ORDER BY RD.RateAmt DESC, RD.RoomNum ASC ;
+
+     RESID    ROOMNUM ROOMTYPE ROOMTYPEDESC    TO_CHAR(R                        
+---------- ---------- -------- --------------- ---------                        
+      1011        224 K        King Bed          $119.00                        
+      1005        303 D        2 Double Beds     $119.00                        
+      1006        501 KS       King Suite        $119.00                        
+      1006        502 KS       King Suite        $119.00                        
+      1004        320 D        2 Double Beds     $110.00                        
+      1010        321 K        King Bed          $109.00                        
+      1008        321 K        King Bed           $99.00                        
+      1008        320 D        2 Double Beds      $89.00                        
+      1003        409 D        2 Double Beds      $89.00                        
+
+9 rows selected.
+
+SQL> 
+SQL> -- 18.
+SQL> SELECT R.ResID, TO_CHAR(CheckInDate, 'mm-dd-yyyy'), TO_CHAR(CheckOutDate, 'mm-dd-yyyy'), R.CustID, C.CustFName, C.CustLName, COUNT(RoomNum)
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN CUSTOMER_jxt C
+  4  	 ON C.CustID = R.CustID
+  5   INNER JOIN RESDETAIL_jxt RD
+  6  	 ON RD.ResID = R.ResID
+  7   GROUP BY R.CustID, R.ResID, CheckInDate, CheckOutDate, C.CustFName, C.CustLName, RoomNum
+  8   ORDER BY R.ResID ;
+
+     RESID TO_CHAR(CH TO_CHAR(CH     CUSTID CUSTFNAME       CUSTLNAME           
+---------- ---------- ---------- ---------- --------------- ---------------     
+COUNT(ROOMNUM)                                                                  
+--------------                                                                  
+      1001 09-05-2019 02-08-2018         85 Wesley          Tanner              
+             1                                                                  
+                                                                                
+      1001 09-05-2019 02-08-2018         85 Wesley          Tanner              
+             1                                                                  
+                                                                                
+      1002 09-01-2019 09-10-2019        100 Breanna         Rhodes              
+             1                                                                  
+                                                                                
+      1003 09-09-2019 09-11-2019         15 Jeff            Miner               
+             1                                                                  
+                                                                                
+      1004 09-29-2019 10-10-2019         77 Kim             Jackson             
+             1                                                                  
+                                                                                
+      1005 09-15-2019 09-18-2019        119 Mary            Vaugn               
+             1                                                                  
+                                                                                
+      1005 09-15-2019 09-18-2019        119 Mary            Vaugn               
+             1                                                                  
+                                                                                
+      1005 09-15-2019 09-18-2019        119 Mary            Vaugn               
+             1                                                                  
+                                                                                
+      1006 09-24-2019 09-26-2019         97 Chris           Mancha              
+             1                                                                  
+                                                                                
+      1006 09-24-2019 09-26-2019         97 Chris           Mancha              
+             1                                                                  
+                                                                                
+      1007 09-20-2019 09-25-2019        100 Breanna         Rhodes              
+             1                                                                  
+                                                                                
+      1008 10-21-2019 10-03-2019         85 Wesley          Tanner              
+             1                                                                  
+                                                                                
+      1008 10-21-2019 10-03-2019         85 Wesley          Tanner              
+             1                                                                  
+                                                                                
+      1009 10-01-2019 10-04-2019         28 Renee           Walker              
+             1                                                                  
+                                                                                
+      1009 10-01-2019 10-04-2019         28 Renee           Walker              
+             1                                                                  
+                                                                                
+      1010 10-01-2019 10-09-2019         23 Shelby          Day                 
+             1                                                                  
+                                                                                
+      1011 10-08-2019 10-11-2019        120 Amanda          Green               
+             1                                                                  
+                                                                                
+      1011 10-08-2019 10-11-2019        120 Amanda          Green               
+             1                                                                  
+                                                                                
+
+18 rows selected.
+
+SQL> 
+SQL> -- 19. *
+SQL> SELECT R.ResID, RD.RoomNum, RT.RoomTypeDesc, TO_CHAR(RD.RateAmt, '$9,999.99')
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN RESDETAIL_jxt RD
+  4  	 ON R.ResID = RD.ResID
+  5   INNER JOIN ROOM_jxt ROOM
+  6  	 ON RD.RoomNum = ROOM.RooNum
+  7   INNER JOIN RATETYPE_jxt RT
+  8  	 ON R.RateType = RT.RateType
+  9   INNER JOIN ROOMTYPE_jxt ROT
+ 10  	 ON ROOM.RoomType = ROT.RoomType
+ 11   WHERE ResID = 1005 AND (SELECT MAX(RateAmt) FROM RESDETAIL_jxt WHERE ResID = 1005) ;
+ WHERE ResID = 1005 AND (SELECT MAX(RateAmt) FROM RESDETAIL_jxt WHERE ResID = 1005) 
+                                                                                   *
+ERROR at line 11:
+ORA-00936: missing expression 
+
+
+SQL> 
+SQL> -- 20.
+SQL> SELECT AGT.AgentType AS "AgentType", AGT.AgentTypeDesc AS "Desc", COUNT(A.AgentType) AS "Count"
+  2    FROM AGENTTYPE_jxt AGT
+  3   INNER JOIN AGENT_jxt A
+  4  	 ON A.AgentType = AGT.AgentType
+  5   GROUP BY AGT.AgentType, AGT.AgentType, AGT.AgentTypeDesc
+  6   ORDER BY COUNT(A.AgentType) ;
+
+AgentType Desc            Count                                                 
+--------- ---------- ----------                                                 
+RC        Res Center          1                                                 
+FD        Front Desk          1                                                 
+T         Telephone           2                                                 
+
+SQL> 
+SQL> -- 21.
+SQL> SELECT R.ResID, RD.RoomNum, RT.RoomTypeDesc, RateTypeDesc, RD.RateAmt
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN RATETYPE_jxt RT
+  4  	 ON RT.RateType = R.RateType
+  5   INNER JOIN RESDETAIL_jxt RD
+  6  	 ON R.ResID = RD.ResID
+  7   INNER JOIN ROOM_jxt ROOM
+  8  	 ON RD.RoomNum = ROOM.RoomNum
+  9   INNER JOIN ROOMTYPE_jxt RT
+ 10  	 ON RT.RoomType = ROOM.RoomType
+ 11   WHERE RD.RateAmt > (SELECT AVG(RateAmt) FROM RESDETAIL_jxt)
+ 12   ORDER BY RD.RoomNum ;
+
+     RESID    ROOMNUM ROOMTYPEDESC    RATETYPEDE    RATEAMT                     
+---------- ---------- --------------- ---------- ----------                     
+      1001        225 2 Double Beds   Corporate         125                     
+      1011        225 2 Double Beds   Weekend           129                     
+      1005        302 King Bed        Standard          139                     
+      1007        302 King Bed        Standard          139                     
+      1005        304 King Suite      Standard          149                     
+      1002        305 2 Double Beds   Standard          149                     
+      1009        409 2 Double Beds   Weekend           129                     
+      1009        502 King Suite      Weekend           129                     
+
+8 rows selected.
+
+SQL> 
+SQL> -- 22. *
+SQL> SELECT DISTINCT RD.RoomNum AS "RmNum", R.RoomType AS "RmType", RoomTypeDesc, RS.RateType AS "RateType", RateTypeDesc, RateAmt AS "RateAmt"
+  2    FROM RESERVATION_jxt RS, RESDETAIL_jxt RD, ROOM_jxt R, ROOMTYPE_jxt RT, RATETYPE_jxt RY
+  3   WHERE RD.RoomNum = R.RoomNum AND
+  4  	    RS.ResID = RD.ResID AND
+  5  	    RS.RateType = RY.RateType AND
+  6  	    R.RoomType = RT.RoomType AND
+  7  	    RateAmt > 115
+  8   ORDER BY RateAmt DESC ;
+
+     RmNum Rm ROOMTYPEDESC    RateType RATETYPEDE    RateAmt                    
+---------- -- --------------- -------- ---------- ----------                    
+       305 D  2 Double Beds   S        Standard          149                    
+       304 KS King Suite      S        Standard          149                    
+       302 K  King Bed        S        Standard          139                    
+       225 D  2 Double Beds   W        Weekend           129                    
+       409 D  2 Double Beds   W        Weekend           129                    
+       502 KS King Suite      W        Weekend           129                    
+       225 D  2 Double Beds   C        Corporate         125                    
+       224 K  King Bed        C        Corporate         120                    
+       303 D  2 Double Beds   S        Standard          119                    
+       224 K  King Bed        W        Weekend           119                    
+       501 KS King Suite      W        Weekend           119                    
+       502 KS King Suite      W        Weekend           119                    
+
+12 rows selected.
+
+SQL> 
+SQL> -- 23. *
+SQL> SELECT R.RoomNum, R.RoomType, COUNT(RD.ResID)
+  2    FROM ROOM_jxt R
+  3    LEFT JOIN RESDETAIL_jxt RD
+  4  	 ON R.RoomNum = RD.RoomNum
+  5   GROUP BY R.RoomNum, R.RoomType
+  6   ORDER BY COUNT(RD.ResID) ;
+
+   ROOMNUM ROOMTYPE COUNT(RD.RESID)                                             
+---------- -------- ---------------                                             
+       301 D                      0                                             
+       303 D                      1                                             
+       501 KS                     1                                             
+       305 D                      1                                             
+       304 KS                     1                                             
+       321 K                      2                                             
+       225 D                      2                                             
+       302 K                      2                                             
+       409 D                      2                                             
+       502 KS                     2                                             
+       320 D                      2                                             
+       224 K                      2                                             
+
+12 rows selected.
+
+SQL> 
+SQL> -- 24.
+SQL> SELECT CustID, CustFName AS "FirstName", CustLName AS "LastName", '('||SUBSTR(CustPhone,1,3)||')'||SUBSTR(CustPhone,4,3)||'-'||SUBSTR(CustPhone,7,4) AS "Phone"
+  2    FROM CUSTOMER_jxt
+  3   WHERE LoyaltyID IS NOT NULL ;
+
+    CUSTID FirstName       LastName                                             
+---------- --------------- ---------------                                      
+Phone                                                                           
+-------------------------------------------                                     
+        85 Wesley          Tanner                                               
+(214)555-1234                                                                   
+                                                                                
+       100 Breanna         Rhodes                                               
+(214)555-9191                                                                   
+                                                                                
+        77 Kim             Jackson                                              
+(817)555-4911                                                                   
+                                                                                
+       119 Mary            Vaugn                                                
+(817)555-2334                                                                   
+                                                                                
+        97 Chris           Mancha                                               
+(469)555-3440                                                                   
+                                                                                
+        28 Renee           Walker                                               
+(214)555-9285                                                                   
+                                                                                
+
+6 rows selected.
+
+SQL> 
+SQL> -- 25. *
+SQL> SELECT R.RoomNum, RT.RoomTypeDesc, RateTypeDesc, TO_CHAR(RD.RateAmt, '$9,999.99')
+  2    FROM RATETYPE_jxt, ROOM_jxt R
+  3   INNER JOIN ROOMTYPE_jxt RT
+  4  	 ON R.RoomType = RT.RoomType
+  5   INNER JOIN RESDETAIL_jxt RD
+  6  	 ON R.RoomNum = RD.RoomNum
+  7   WHERE RD.ResID IN (SELECT ResID FROM RESERVATION_jxt) AND RD.ResID = 1005 ;
+
+   ROOMNUM ROOMTYPEDESC    RATETYPEDE TO_CHAR(RD                                
+---------- --------------- ---------- ----------                                
+       302 King Bed        Corporate     $139.00                                
+       302 King Bed        Standard      $139.00                                
+       302 King Bed        Weekend       $139.00                                
+       303 2 Double Beds   Corporate     $119.00                                
+       303 2 Double Beds   Standard      $119.00                                
+       303 2 Double Beds   Weekend       $119.00                                
+       304 King Suite      Corporate     $149.00                                
+       304 King Suite      Standard      $149.00                                
+       304 King Suite      Weekend       $149.00                                
+
+9 rows selected.
+
+SQL> 
+SQL> -- 26. *
+SQL> SELECT R.ResID, R.CheckInDate, R.CheckOutDate, C.CustID, C.CustLName, R.AgentID, AgentFName
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN CUSTOMER_jxt C
+  4  	 ON R.CustID = C.CustID
+  5   INNER JOIN AGENT_jxt A
+  6  	 ON R.AgentID = A.AgentID
+  7   WHERE R.CheckInDate >= TO_DATE('2018-02-28', 'YYYY-MM-DD')
+  8   ORDER BY R.CheckInDate, R.ResID ASC ;
+
+     RESID CHECKINDATE CHECKOUTDATE     CUSTID CUSTLNAME          AGENTID       
+---------- ----------- ------------ ---------- --------------- ----------       
+AGENTFNAME                                                                      
+---------------                                                                 
+      1002 01-SEP-19   10-SEP-19           100 Rhodes                   5       
+Janice                                                                          
+                                                                                
+      1001 05-SEP-19   08-FEB-18            85 Tanner                  20       
+Megan                                                                           
+                                                                                
+      1003 09-SEP-19   11-SEP-19            15 Miner                   14       
+John                                                                            
+                                                                                
+      1005 15-SEP-19   18-SEP-19           119 Vaugn                   20       
+Megan                                                                           
+                                                                                
+      1007 20-SEP-19   25-SEP-19           100 Rhodes                  20       
+Megan                                                                           
+                                                                                
+      1006 24-SEP-19   26-SEP-19            97 Mancha                  14       
+John                                                                            
+                                                                                
+      1004 29-SEP-19   10-OCT-19            77 Jackson                 28       
+Ray                                                                             
+                                                                                
+      1009 01-OCT-19   04-OCT-19            28 Walker                  14       
+John                                                                            
+                                                                                
+      1010 01-OCT-19   09-OCT-19            23 Day                     28       
+Ray                                                                             
+                                                                                
+      1011 08-OCT-19   11-OCT-19           120 Green                   14       
+John                                                                            
+                                                                                
+      1008 21-OCT-19   03-OCT-19            85 Tanner                   5       
+Janice                                                                          
+                                                                                
+
+11 rows selected.
+
+SQL> 
+SQL> -- 27. *
+SQL> SELECT RD.RoomNum, RoomTypeDesc, RateTypeDesc, RD.RateAmt
+  2    FROM ROOM_jxt RM, RATETYPE_jxt RAT, ROOMTYPE_jxt RT, RESDETAIL_jxt RD, RESERVATION_jxt R
+  3   WHERE RM.RoomType = RT.RoomType AND
+  4  	    RM.RoomNum = RD.RoomNum AND
+  5  	    R.RateType = RAT.RateType AND
+  6  	    RateAmt > (SELECT AVG(RateAmt) FROM RESDETAIL_jxt)
+  7   GROUP BY RD.RoomNum, RoomTypeDesc, RateTypeDesc, RD.RateAmt
+  8   ORDER BY RD.RateAmt DESC ;
+
+   ROOMNUM ROOMTYPEDESC    RATETYPEDE    RATEAMT                                
+---------- --------------- ---------- ----------                                
+       305 2 Double Beds   Corporate         149                                
+       305 2 Double Beds   Standard          149                                
+       305 2 Double Beds   Weekend           149                                
+       304 King Suite      Corporate         149                                
+       304 King Suite      Standard          149                                
+       304 King Suite      Weekend           149                                
+       302 King Bed        Corporate         139                                
+       302 King Bed        Standard          139                                
+       302 King Bed        Weekend           139                                
+       225 2 Double Beds   Corporate         129                                
+       409 2 Double Beds   Corporate         129                                
+       225 2 Double Beds   Standard          129                                
+       409 2 Double Beds   Standard          129                                
+       225 2 Double Beds   Weekend           129                                
+       409 2 Double Beds   Weekend           129                                
+       502 King Suite      Corporate         129                                
+       502 King Suite      Standard          129                                
+       502 King Suite      Weekend           129                                
+       225 2 Double Beds   Corporate         125                                
+       225 2 Double Beds   Standard          125                                
+       225 2 Double Beds   Weekend           125                                
+
+21 rows selected.
+
+SQL> 
+SQL> -- 28. *
+SQL> SELECT COUNT(CustID) AS "LoyaltyCount"
+  2    FROM CUSTOMER_jxt
+  3   WHERE LoyaltyID IS NOT NULL ;
+
+LoyaltyCount                                                                    
+------------                                                                    
+           6                                                                    
+
+SQL> 
+SQL> -- 29.
+SQL> SELECT A.AgentID AS "AgentID", AgentFName || ' ' || AgentLName AS "Agent", COUNT(R.ResID) AS "ResCount"
+  2    FROM AGENT_jxt A
+  3   INNER JOIN RESERVATION_jxt R
+  4  	 ON A.AgentID = R.AgentID
+  5   GROUP BY A.AgentID, AgentFName, AgentLName
+  6   ORDER BY COUNT(R.ResID) DESC;
+
+   AgentID Agent                             ResCount                           
+---------- ------------------------------- ----------                           
+        14 John King                                4                           
+        20 Megan Smith                              3                           
+         5 Janice May                               2                           
+        28 Ray Schultz                              2                           
+
+SQL> 
+SQL> -- 30.
+SQL> SELECT A.AgentID AS "AgentID", AgentFName AS "FirstName", AgentLName AS "LastName", COUNT(ResID) AS "ResCount"
+  2    FROM AGENT_jxt A
+  3   INNER JOIN RESERVATION_jxt R
+  4  	 ON A.AgentID = R.AgentID
+  5   GROUP BY AgentFName, AgentLName, A.AgentID HAVING COUNT(ResID) > 1
+  6   ORDER BY COUNT(ResID) DESC, A.AgentID ASC ;
+
+   AgentID FirstName       LastName          ResCount                           
+---------- --------------- --------------- ----------                           
+        14 John            King                     4                           
+        20 Megan           Smith                    3                           
+         5 Janice          May                      2                           
+        28 Ray             Schultz                  2                           
+
+SQL> 
+SQL> -- 31.
+SQL> SELECT CustID AS "Customer_ID", CustFName AS "First_Name", CustLName AS "Last_Name"
+  2    FROM CUSTOMER_jxt
+  3   WHERE CustFName LIKE '%W%' OR CustLName LIKE '%W%'
+  4   ORDER BY CustLName ;
+
+Customer_ID First_Name      Last_Name                                           
+----------- --------------- ---------------                                     
+         85 Wesley          Tanner                                              
+         28 Renee           Walker                                              
+        121 Susan           White                                               
+
+SQL> 
+SQL> -- 32.
+SQL> SELECT C.CustID AS "CustID", C.CustFName AS "FirstName", C.CustLName AS "LastName"
+  2    FROM RESERVATION_jxt R
+  3    LEFT JOIN CUSTOMER_jxt C
+  4  	 ON C.CustID = R.CustID
+  5   WHERE C.CustID NOT IN (SELECT NULL FROM RESERVATION_jxt R
+  6  			     WHERE C.CustID = R.CustID ) ;
+
+no rows selected
+
+SQL> 
+SQL> -- 33.
+SQL> SELECT RD.ResID AS "ResNum", RoomNum AS "RoomNum", SUM(RD.RateAmt) AS "TotalCharge"
+  2    FROM RESERVATION_jxt R
+  3   INNER JOIN RESDETAIL_jxt RD
+  4  	 ON RD.ResID = R.ResID
+  5   WHERE RD.ResID = 1005
+  6   GROUP BY RD.ResID, RoomNum, RD.RateAmt ;
+
+    ResNum    RoomNum TotalCharge                                               
+---------- ---------- -----------                                               
+      1005        304         149                                               
+      1005        302         139                                               
+      1005        303         119                                               
+
+SQL> 
+SQL> set echo off
